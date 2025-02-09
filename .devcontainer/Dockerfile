@@ -5,11 +5,27 @@ FROM mcr.microsoft.com/devcontainers/base:jammy
 # For example, installing additional packages
 # RUN apt-get update && apt-get install -y <package-name>
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get -y install --no-install-recommends build-essential cmake git stlink-tools \
-    && apt-get -y install gcc-arm-none-eabi
-    
+    && apt-get -y install --no-install-recommends \
+        build-essential \
+        cmake \
+        git \
+        stlink-tools \
+        gcc-arm-none-eabi \
+        usbutils \
+        kmod \
+    && apt-get -y install \
+        linux-tools-$(uname -r) \
+        linux-modules-$(uname -r) \
+        linux-modules-extra-$(uname -r)
+
 # Clone the FreeRTOS-Kernel repository
 RUN git clone https://github.com/FreeRTOS/FreeRTOS-Kernel.git /usr/local/src/FreeRTOS-Kernel
+
+# Run the specified commands
+RUN depmod \
+    && modprobe vhci-hcd \
+    && lsmod | grep usb \
+    && usbip --tcp-port 2001 list -r localhost
 
 # Set up any environment variables
 # ENV MY_VAR=my_value
