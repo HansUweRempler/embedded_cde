@@ -1,0 +1,37 @@
+#cloud-config
+runcmd:
+  - [eval, 'echo $(cat /proc/cmdline) "autoinstall" > /root/cmdline']
+  - [eval, 'mount -n --bind -o ro /root/cmdline /proc/cmdline']
+  - [eval, 'snap restart subiquity.subiquity-server']
+  - [eval, 'snap restart subiquity.subiquity-service']
+autoinstall:
+  version: 1
+  locale: en_US.UTF-8
+  keyboard:
+    layout: 'de'
+    variant: 'nodeadkeys'
+  identity:
+    hostname: ubu24-template
+    realname: 'Ansible user Installation User'
+    username: ansible
+    password: '$1$6h1OXuPB$ghtLn4uwNuwDVn/RqWylw/'
+  storage:
+    layout:
+      name: lvm
+      sizing-policy: all
+  ssh:
+    install-server: yes
+    authorized-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKafQfCf48DzJv7z6/NxkkAcLRYv+Xo32cNivfbAsTTt rempler@mAIbros
+    allow-pw: no
+  packages:
+    - qemu-guest-agent
+    - curl
+    - screen
+    - net-tools
+    - docker.io
+  late-commands:
+    - echo 'ansible ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/99_ansible
+    - curtin in-target -- apt update
+    - curtin in-target -- apt -y upgrade
+
