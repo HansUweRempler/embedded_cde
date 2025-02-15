@@ -141,9 +141,8 @@ coder config-ssh
 
 Finally, login and port-forward local USBIP server to the Coder workspace that shall access the USB device (via USPIP client):
 ```
-ssh -R 2001:localhost:3240 coder.stm32devcontainer.main
-ssh -R 2001:localhost:3240 coder.androiddev.main
-ssh -R 2001:localhost:3240 ansible@maibrosvm01
+ssh -R 2001:localhost:3240 coder.androiddev.main	# template: Kubernetes (Deployment)
+ssh -R 2001:localhost:3240 coder.EmbeddedCDE.main	# template: Devcontainers (Kubernetes)
 ```
 
 ## Windows
