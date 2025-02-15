@@ -3,7 +3,8 @@
 {
 	"name": "MSdevconUbuntu",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/base:jammy",
+	//"image": "mcr.microsoft.com/devcontainers/base:jammy",
+	"dockerFile": "Dockerfile",
 	"features": {
 		// "ghcr.io/devcontainers/features/python:1": {}
 	}
