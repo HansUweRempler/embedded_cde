@@ -303,7 +303,7 @@ Dann via SSH-Tunnel in den Kubernetes Pod rein. Coder Workspace, der auf dem Tem
 ssh -R 2001:localhost:3240 coder.androiddev.main
 ```
 
-Und dann die Maschinerie lostreten
+Install necessary packages. This is only needed for Coder Kubernetes pod deployment because no dev container setup takes care of this (like configured in a `.devcontainer` dir).
 ```
 apt update
 apt install -y usbutils \
@@ -312,7 +312,10 @@ kmod \
 linux-tools-$(uname -r) \
 linux-modules-$(uname -r) \
 linux-modules-extra-$(uname -r)
+```
 
+Load kernel modules and attach the remote USBIP tunnelled USB device.
+```
 depmod
 modprobe vhci-hcd
 lsmod | grep usb
