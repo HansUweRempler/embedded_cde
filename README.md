@@ -15,13 +15,6 @@ The required packages can be found in the [Packages](#packages) section.
 
 The VM network config needs to be completed beforehand if a bridge network shall be used, see [Network](#network). The 
 
-## Cloud
-**Cloud-init** is a general mechanism for unattended Linux installations for cloud provisioning. Its basis are config files `user-data` and `meta-data` which become part of an ISO installation file. This ISO file is then mounted by, e.g, KVM (virt-install) as `CIDATA`. Its content is used to customize the installation.
-
-**Autoinstall** is the Ubuntu mechanism for unattended, automatic installation of an Ubuntu distribution. Its basis is a single config file that is used during the installation. This config can alternatively be used inside cloud-init files. The latest cloud-init version supports a dedicated `autoinstall:` section, see template `./infrastructure_kvm/user-data.template`.
-
-The template `meta-data` is empty. Every herein required meta data is already in `user-data` due to the use of the Ubuntu autoinstallation mechanism.
-
 ## KVM Virtualization
 ### Packages
 Install necessary KVM hypervisor, libvirt and tools packages:
@@ -86,6 +79,13 @@ Use [virt-manager](https://virt-manager.org/) or CLI commands to shutdown and st
 virsh shutdown maibrosvm00
 virsh start maibrosvm00
 ```
+
+## Cloud
+**Cloud-init** is a general mechanism for unattended Linux installations for cloud provisioning. Its basis are config files `user-data` and `meta-data` which become part of an ISO installation file. This ISO file is then mounted by, e.g, KVM (virt-install) as `CIDATA`. Its content is used to customize the installation.
+
+**Autoinstall** is the Ubuntu mechanism for unattended, automatic installation of an Ubuntu distribution. Its basis is a single config file that is used during the installation. This config can alternatively be used inside cloud-init files. The latest cloud-init version supports a dedicated `autoinstall:` section, see template `./infrastructure_kvm/user-data.template`.
+
+The template `meta-data` is empty. Every herein required meta data is already in `user-data` due to the use of the Ubuntu autoinstallation mechanism.
 
 # Kubernetes
 A Kubernetes (in short "k8s") cluster can be installed manually with a lot of effort or pre-configured via some distros. K3s and k0s are Kubernetes distros, while Rancher is a management platform (with web ui) that can control these and other Kubernetes clusters. Rancher comes with a K3s distro under the hood.
