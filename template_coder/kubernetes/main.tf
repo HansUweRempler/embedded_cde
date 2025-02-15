@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     coder = {
-      source = "coder/coder"
+      source  = "coder/coder"
     }
     kubernetes = {
       source = "hashicorp/kubernetes"
@@ -9,7 +9,10 @@ terraform {
   }
 }
 
-provider "coder" {
+provider "coder" {}
+provider "kubernetes" {
+  # Authenticate via ~/.kube/config or a Coder-specific ServiceAccount, depending on admin preferences
+  config_path = var.use_kubeconfig == true ? "~/.kube/config" : null
 }
 
 variable "use_kubeconfig" {
@@ -95,101 +98,10 @@ data "coder_parameter" "home_disk_size" {
   }
 }
 
-provider "kubernetes" {
-  # Authenticate via ~/.kube/config or a Coder-specific ServiceAccount, depending on admin preferences
-  config_path = var.use_kubeconfig == true ? "~/.kube/config" : null
-}
 
 data "coder_workspace" "me" {}
 data "coder_workspace_owner" "me" {}
 
-resource "coder_agent" "main" {
-  os             = "linux"
-  arch           = "amd64"
-  startup_script = <<-EOT
-    set -e
-
-    # Install the latest code-server.
-    # Append "--version x.x.x" to install a specific version of code-server.
-    curl -fsSL -k https://code-server.dev/install.sh | sh -s -- --method=standalone --prefix=/tmp/code-server
-
-    # Start code-server in the background.
-    /tmp/code-server/bin/code-server --auth none --port 13337 >/tmp/code-server.log 2>&1 &
-  EOT
-
-  # The following metadata blocks are optional. They are used to display
-  # information about your workspace in the dashboard. You can remove them
-  # if you don't want to display any information.
-  # For basic resources, you can use the `coder stat` command.
-  # If you need more control, you can write your own script.
-  metadata {
-    display_name = "CPU Usage"
-    key          = "0_cpu_usage"
-    script       = "coder stat cpu"
-    interval     = 10
-    timeout      = 1
-  }
-
-  metadata {
-    display_name = "RAM Usage"
-    key          = "1_ram_usage"
-    script       = "coder stat mem"
-    interval     = 10
-    timeout      = 1
-  }
-
-  metadata {
-    display_name = "Home Disk"
-    key          = "3_home_disk"
-    script       = "coder stat disk --path $${HOME}"
-    interval     = 60
-    timeout      = 1
-  }
-
-  metadata {
-    display_name = "CPU Usage (Host)"
-    key          = "4_cpu_usage_host"
-    script       = "coder stat cpu --host"
-    interval     = 10
-    timeout      = 1
-  }
-
-  metadata {
-    display_name = "Memory Usage (Host)"
-    key          = "5_mem_usage_host"
-    script       = "coder stat mem --host"
-    interval     = 10
-    timeout      = 1
-  }
-
-  metadata {
-    display_name = "Load Average (Host)"
-    key          = "6_load_host"
-    # get load avg scaled by number of cores
-    script   = <<EOT
-      echo "`cat /proc/loadavg | awk '{ print $1 }'` `nproc`" | awk '{ printf "%0.2f", $1/$2 }'
-    EOT
-    interval = 60
-    timeout  = 1
-  }
-}
-
-# code-server
-resource "coder_app" "code-server" {
-  agent_id     = coder_agent.main.id
-  slug         = "code-server"
-  display_name = "code-server"
-  icon         = "/icon/code.svg"
-  url          = "http://localhost:13337?folder=/home/coder"
-  subdomain    = false
-  share        = "owner"
-
-  healthcheck {
-    url       = "http://localhost:13337/healthz"
-    interval  = 3
-    threshold = 10
-  }
-}
 
 resource "kubernetes_persistent_volume_claim" "home" {
   metadata {
@@ -333,7 +245,6 @@ resource "kubernetes_deployment" "main" {
             read_only  = false
           }
         }
-        
         volume {
           name = "usb"
           host_path {
@@ -348,6 +259,7 @@ resource "kubernetes_deployment" "main" {
             type = "Directory"
           }
         }
+
         affinity {
           // This affinity attempts to spread out all workspace pods evenly across
           // nodes.
@@ -369,5 +281,92 @@ resource "kubernetes_deployment" "main" {
         }
       }
     }
+  }
+}
+
+resource "coder_agent" "main" {
+  arch           = "amd64"
+  os             = "linux"
+  startup_script = <<-EOT
+    set -e
+
+    # Install the latest code-server.
+    # Append "--version x.x.x" to install a specific version of code-server.
+    curl -fsSL -k https://code-server.dev/install.sh | sh -s -- --method=standalone --prefix=/tmp/code-server
+
+    # Start code-server in the background.
+    /tmp/code-server/bin/code-server --auth none --port 13337 >/tmp/code-server.log 2>&1 &
+  EOT
+
+  # The following metadata blocks are optional. They are used to display
+  # information about your workspace in the dashboard. You can remove them
+  # if you don't want to display any information.
+  # For basic resources, you can use the `coder stat` command.
+  # If you need more control, you can write your own script.
+  metadata {
+    display_name = "CPU Usage"
+    key          = "0_cpu_usage"
+    script       = "coder stat cpu"
+    interval     = 10
+    timeout      = 1
+  }
+
+  metadata {
+    display_name = "RAM Usage"
+    key          = "1_ram_usage"
+    script       = "coder stat mem"
+    interval     = 10
+    timeout      = 1
+  }
+
+  metadata {
+    display_name = "Home Disk"
+    key          = "3_home_disk"
+    script       = "coder stat disk --path $${HOME}"
+    interval     = 60
+    timeout      = 1
+  }
+
+  metadata {
+    display_name = "CPU Usage (Host)"
+    key          = "4_cpu_usage_host"
+    script       = "coder stat cpu --host"
+    interval     = 10
+    timeout      = 1
+  }
+
+  metadata {
+    display_name = "Memory Usage (Host)"
+    key          = "5_mem_usage_host"
+    script       = "coder stat mem --host"
+    interval     = 10
+    timeout      = 1
+  }
+
+  metadata {
+    display_name = "Load Average (Host)"
+    key          = "6_load_host"
+    # get load avg scaled by number of cores
+    script   = <<EOT
+      echo "`cat /proc/loadavg | awk '{ print $1 }'` `nproc`" | awk '{ printf "%0.2f", $1/$2 }'
+    EOT
+    interval = 60
+    timeout  = 1
+  }
+}
+
+resource "coder_app" "code-server" {
+  agent_id     = coder_agent.main.id
+  slug         = "code-server"
+  display_name = "code-server"
+  url          = "http://localhost:13337?folder=/home/coder"
+  icon         = "/icon/code.svg"
+  subdomain    = false
+  share        = "owner"
+
+  healthcheck {
+    url       = "http://localhost:13337/healthz"
+    interval  = 3
+    threshold = 10
   }
 }

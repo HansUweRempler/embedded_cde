@@ -249,7 +249,7 @@ resource "kubernetes_deployment" "main" {
     replicas = 1
     selector {
       match_labels = {
-        "app.kubernetes.io/name" = "coder-workspace"
+        "app.kubernetes.io/name"     = "coder-workspace"
       }
     }
     strategy {
@@ -259,7 +259,7 @@ resource "kubernetes_deployment" "main" {
     template {
       metadata {
         labels = {
-          "app.kubernetes.io/name" = "coder-workspace"
+          "app.kubernetes.io/name"     = "coder-workspace"
         }
       }
       spec {
@@ -302,13 +302,13 @@ resource "kubernetes_deployment" "main" {
           }
           volume_mount {
             mount_path = "/dev/bus/usb"
-            name = "usb"
-            read_only = false
+            name       = "usb"
+            read_only  = false
           }
           volume_mount {
             mount_path = "/sys"
-            name = "sys"
-            read_only = false
+            name       = "sys"
+            read_only  = false
           }
         }
 
