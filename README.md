@@ -9,7 +9,7 @@ Architecture: https://miro.com/app/board/uXjVLpRwctA=/ \
 Available Resources: 16CPUs, 32768MB, 2000GB
 
 ## Automation Script
-Summary of the below sections in one script `./infrastructure_kvm/install_kvms.sh`. It modifies the cloud-init template files and runs multiple VM installations. The script has still some hard-coded values inside, e.g., the installation ISO is `ubuntu-24.04.1-live-server-amd64.iso`, download from https://releases.ubuntu.com/noble/.
+Summary of the below sections in one script `./infrastructure_kvm/install_kvms.sh`. It modifies the cloud-init template files and runs multiple VM installations, see [Cloud](#cloud). The script has still some hard-coded values inside, e.g., the installation ISO is `ubuntu-24.04.1-live-server-amd64.iso`, download from https://releases.ubuntu.com/noble/.
 
 The required packages can be found in the [Packages](#packages) section.
 
