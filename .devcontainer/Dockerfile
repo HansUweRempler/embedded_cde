@@ -6,12 +6,12 @@ FROM mcr.microsoft.com/devcontainers/base:jammy
 # RUN apt-get update && apt-get install -y <package-name>
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
-        build-essential \
-        cmake \
-        git \
-        stlink-tools \
-        gcc-arm-none-eabi \
+        # build-essential \
+        # cmake \
+        # git \
+        #gcc-arm-none-eabi \
         usbutils \
+        stlink-tools \
         kmod \
     && apt-get -y install \
         linux-tools-$(uname -r) \
@@ -19,7 +19,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
         linux-modules-extra-$(uname -r)
 
 # Clone the FreeRTOS-Kernel repository
-RUN git clone https://github.com/FreeRTOS/FreeRTOS-Kernel.git /usr/local/src/FreeRTOS-Kernel
+# RUN git clone https://github.com/FreeRTOS/FreeRTOS-Kernel.git /usr/local/src/FreeRTOS-Kernel
 
 # Run the specified commands
 RUN depmod \
