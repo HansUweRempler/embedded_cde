@@ -24,8 +24,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 # Run the specified commands
 RUN depmod \
     && modprobe vhci-hcd \
-    && lsmod | grep usb \
-    && usbip --tcp-port 2001 list -r localhost
+    && lsmod | grep usb
 
 # Set up any environment variables
 # ENV MY_VAR=my_value
