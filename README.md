@@ -115,6 +115,7 @@ sudo apt install hwdata linux-tools-generic
 
 #Load USBIP server
 sudo modprobe usbip-host
+sudo modprobe vhci_hcd
 sudo usbipd --daemon
 
 # List local USB devices
