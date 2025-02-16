@@ -155,33 +155,41 @@ Optional section to test USBIP.
 This section tests the manual process to use privileged Docker container. This container can then access the host's kernel to load virtual USB kernel modules. The USBIP tool can then attach a USB device from USBIP server to the virtual USB device kernel module. This device is then addded to the USB device tree.
 
 The dev PC start the USPIP server and binds the USB device. The target PC starts a privileged Docker container. Therein, a SSH server is started. Then, a SSH tunnel (including port forwarding) from dev PC to the Docker container that runs on the target PC. In that login (inside the Docker container) the necessary USBIP kernel modules and tools are installed. The USBIP tool can then attach the USB device to the port forwarded SSH tunnel.
+
+**1. Step:** Load USBIP server and bind a USB device to it
 ```
-# 1. Load USBIP server
 sudo modprobe usbip-host
 sudo usbipd --daemon
-
-# 2. Bind USB device to USBIP server
 sudo usbip bind -b 1-3
+```
 
-# 3. ssh to remote machine where the docker container will run
+**2. Step:** Ssh to remote machine where the Docker container will run
+```
 ssh ansible@maibrosvm01
+```
 
-# 4. start privileged docker container and port forward ssh from remote machine into docker container
+**3. Step:** Start privileged Docker container and port forward ssh from remote machine into it. This is somehow like starting/deploying a workspace.
+```
 sudo docker run -p 52022:22 -t -i --privileged -v /dev/bus/usb:/dev/bus/usb ubuntu bash
+```
 
-# 5. get into the docker container and prepare ssh server
+**4. Step:** Get into the docker container and prepare ssh server (as root)
+```
 apt update
 apt install openssh-server net-tools nano
 passwd
 nano /etc/ssh/sshd_config
 +++ PermitRootLogin yes
 service ssh start
+```
 
-# 6. ssh from host into the docker inside remote machine
+**5. Step:** Ssh from host into the docker inside remote machine. Via Coder (or Gitpod or ...) this is typically managed by the command line tool.
+```
 ssh -p 52022 -R 2001:localhost:3240 root@maibrosvm01
-get das??? ssh  -R 2001:localhost:3240 coder.stm32devcontainer.main 
+```
 
-# 7. In Container USBIP bind _alles als root hier_
+**6. Step:** Inside the Container to the USBIP tool stuff (as root)
+```
 apt install usbutils \
 stlink-tools \
 kmod \
@@ -208,6 +216,11 @@ For a Kubernetes installation of Coder use the package manager Helm. The Coder c
     # If you're just trying Coder, access the dashboard via the service IP.
     - name: CODER_ACCESS_URL
       value: "http://192.168.178.186"
+```
+TODO: Need to double check. I'm unsure, if `allowPrivilegedEscalation` is set to run the Coder control plane or the workspace pods as `privileged`. The Coder control plane doesn't need this additional rights. And it is also not needed for workspace pods if the Coder `envbuilder` is used. But maybe it's required for the workspace Kubernetes pod or the Kubernetes VM deployment. It is required for the USBIP tools stuff to attach to the tunneled USB device, see [Docker](#docker).
+```
+  securityContext:
+    allowPrivilegeEscalation: true
 ```
 
 * coder url: http://192.168.178.186:32580/setup
@@ -242,11 +255,7 @@ Es gibt auch ein Coder Template mit dem Coder ein Kubernetes Pod so startet, das
 	* einen Kubernetes Pod mit einen Devcontainer, der im Repo via `.devcontainer` konfiguriert wird
 
 #### step 1
-Coder YAML: Bin mir nicht sicher, ob das Coder Kubernetes YAML Setting für privileged esacalation für den priviliged start der Pods gesetzt werden muss, aber aktuell hat meine Installation das (woher auch immer, hab vielleicht vergessen, das gesetzt zu haben?!)
-```
-  securityContext:
-    allowPrivilegeEscalation: true
-```
+See [Installation](#installation).
 
 #### step 2
 Das Coder Template für "Kubernetes (Deployment)" anpassen, um
