@@ -1,4 +1,7 @@
 #!/bin/bash
+# Script loops through an config values array and create VMs via virt-install.
+# It's used to ease all the VM reinstallation when a Kubernetes setup went wrong.
+# Yes, it's an ugly script, hard-coded Ubuntu ISO "ubuntu-24.04.1-live-server-amd64.iso".
 
 # Define your arrays
 VMNO=("02" "03")
