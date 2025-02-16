@@ -1,11 +1,14 @@
 #!/bin/bash
 # Script loops through an config values array and create VMs via virt-install.
 # It's used to ease all the VM reinstallation when a Kubernetes setup went wrong.
-# Yes, it's an ugly script, hard-coded Ubuntu ISO "ubuntu-24.04.1-live-server-amd64.iso".
+
+# Configuration values
+UBUNTU_ISO="ubuntu-24.04.1-live-server-amd64.iso"
+OS_VARIANT="ubuntu24.04"
 
 # Define your arrays
-VMNO=("02" "03")
-VCPU=(2 2)
+VMNO=("00" "01")
+VCPU=(4 2)
 VRAM=(4096 4096)
 SIZE=(100 100)
 
@@ -59,8 +62,8 @@ for ((i=0; i<${#VMNO[@]}; i++)); do
 	  --memory ${VRAM[i]} \
 	  --disk path=maibrosvm${VMNO[i]}.qcow2,format=qcow2,size=${SIZE[i]} \
 	  --disk path=ubuntu-cloud-init${VMNO[i]}.iso,device=cdrom \
-	  --cdrom ubuntu-24.04.1-live-server-amd64.iso \
-	  --os-variant ubuntu24.04 \
+      --cdrom $UBUNTU_ISO \
+	  --os-variant $OS_VARIANT \
 	  --graphics none \
 	  --console pty,target_type=serial \
 	  --network network=br0-net \
