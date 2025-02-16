@@ -232,7 +232,11 @@ TODO: Need to double check. I'm unsure, if `allowPrivilegedEscalation` is set to
 
 ## Devcontainer
 Run Coder workspaces as container and use the devcontainer mechanism to set it up.
-The Coder template can be found in `./template_coder/kubernetes_devcontainer`.
+The Coder template can be found in `./template_coder/kubeDevContainer`. It can be used via
+```
+cd template_coder/kubeDevContainer
+coder templates push -d .
+```
 
 In `.devcontainer/Dockerfile` includes the requires stuff for USBIP client. This is similar to the [Docker](#docker) test.
 
@@ -241,7 +245,7 @@ https://github.com/coder/coder/discussions/16175
 
 ## Kubernetes
 Run Coder workspaces as Kubernetes pods.
-The Coder template can be found in `./template_coder/kubernetes`.
+The Coder template can be found in `./template_coder/kubePod`.
 
 ### Lösung Kubernetes (Coder)
 Ein Kubernetes Pod ist ein Container, der von Kubernetes gestartet und verwaltet wird, z.B. auf welchem Node der (Pod) Workload ausgeführt wird.
