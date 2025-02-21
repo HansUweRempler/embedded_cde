@@ -24,12 +24,6 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 # Clone the FreeRTOS-Kernel repository
 # RUN git clone https://github.com/FreeRTOS/FreeRTOS-Kernel.git /usr/local/src/FreeRTOS-Kernel
 
-# Run the specified commands
-# RUN depmod \
-#     && modprobe usbip_host \
-#     && modprobe vhci_hcd \
-#     && lsmod | grep usb
-
 # Set up any environment variables
 # ENV MY_VAR=my_value
 
