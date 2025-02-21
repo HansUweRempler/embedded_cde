@@ -8,11 +8,12 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
         usbutils \
         stlink-tools \
-        kmod \
-    && apt-get -y install \
-        linux-tools-$(uname -r) \
-        linux-modules-$(uname -r) \
-        linux-modules-extra-$(uname -r)
+        kmod
+        # \
+#    && apt-get -y install \
+#        linux-tools-$(uname -r) \
+#        linux-modules-$(uname -r) \
+#        linux-modules-extra-$(uname -r)
 
 # Embedded build toolchain
 # RUN apt-get -y install --no-install-recommends \

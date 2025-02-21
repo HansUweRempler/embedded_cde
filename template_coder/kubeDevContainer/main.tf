@@ -381,22 +381,6 @@ resource "coder_agent" "main" {
   # For basic resources, you can use the `coder stat` command.
   # If you need more control, you can write your own script.
   metadata {
-    display_name = "CPU Usage"
-    key          = "0_cpu_usage"
-    script       = "coder stat cpu"
-    interval     = 10
-    timeout      = 1
-  }
-
-  metadata {
-    display_name = "RAM Usage"
-    key          = "1_ram_usage"
-    script       = "coder stat mem"
-    interval     = 10
-    timeout      = 1
-  }
-
-  metadata {
     display_name = "Workspaces Disk"
     key          = "3_workspaces_disk"
     script       = "coder stat disk --path /workspaces"
@@ -452,26 +436,6 @@ module "code-server" {
 
   agent_id = coder_agent.main.id
   order    = 1
-}
-
-# See https://registry.coder.com/modules/jetbrains-gateway
-module "jetbrains_gateway" {
-  count  = data.coder_workspace.me.start_count
-  source = "registry.coder.com/modules/jetbrains-gateway/coder"
-
-  # JetBrains IDEs to make available for the user to select
-  jetbrains_ides = ["IU", "PY", "WS", "PS", "RD", "CL", "GO", "RM"]
-  default        = "IU"
-
-  # Default folder to open when starting a JetBrains IDE
-  folder = "/home/coder"
-
-  # This ensures that the latest version of the module gets downloaded, you can also pin the module version to prevent breaking changes in production.
-  version = ">= 1.0.0"
-
-  agent_id   = coder_agent.main.id
-  agent_name = "main"
-  order      = 2
 }
 
 resource "coder_metadata" "container_info" {
