@@ -426,18 +426,6 @@ resource "coder_agent" "main" {
   }
 }
 
-# See https://registry.coder.com/modules/code-server
-module "code-server" {
-  count  = data.coder_workspace.me.start_count
-  source = "registry.coder.com/modules/code-server/coder"
-
-  # This ensures that the latest version of the module gets downloaded, you can also pin the module version to prevent breaking changes in production.
-  version = ">= 1.0.0"
-
-  agent_id = coder_agent.main.id
-  order    = 1
-}
-
 resource "coder_metadata" "container_info" {
   count       = data.coder_workspace.me.start_count
   resource_id = coder_agent.main.id
