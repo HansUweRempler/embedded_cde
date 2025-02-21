@@ -17,6 +17,7 @@
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "uname -a",
+	// Load kernel modules for USBIP
 	"postCreateCommand" : "depmod && modprobe usbip_host && modprobe vhci_hcd && lsmod | grep usb"
 	
 	// Configure tool-specific properties.
