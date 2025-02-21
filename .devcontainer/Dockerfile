@@ -26,7 +26,7 @@ RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
 
 # Run the specified commands
 RUN depmod \
-    && modprobe usbip-host \
+    && modprobe usbip_host \
     && modprobe vhci_hcd \
     && lsmod | grep usb
 
