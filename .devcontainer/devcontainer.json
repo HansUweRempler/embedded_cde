@@ -5,9 +5,6 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	//"image": "mcr.microsoft.com/devcontainers/base:jammy",
 	"dockerFile": "Dockerfile",
-	"features": {
-		// "ghcr.io/devcontainers/features/python:1": {}
-	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -18,7 +15,7 @@
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "uname -a",
 	// Load kernel modules for USBIP
-	"postCreateCommand" : "depmod && modprobe usbip_host && modprobe vhci_hcd && lsmod | grep usb"
+	"postCreateCommand" : "sudo depmod && sudo modprobe usbip_host && sudo modprobe vhci_hcd"
 	
 	// Configure tool-specific properties.
 	// "customizations": {},
