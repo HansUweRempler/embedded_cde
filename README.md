@@ -2,7 +2,8 @@
 Embedded Cloud Development Environment (CDE)
 
 Sources: mAIbros PC ~/kvm_vms \
-Repo: https://github.com/HansUweRempler/embedded_cde
+Repo new: https://github.com/HansUweRempler/embedded_cde
+Repo old: https://github.com/HansUweRempler/STM32
 
 # Infrastructure
 Architecture: https://miro.com/app/board/uXjVLpRwctA=/ \
@@ -108,7 +109,6 @@ Run the following on your developer PC. Access the Coder web UI control plane, u
 
 ## Linux
 Install USBIP server package to bind a USB device. The USBIP server provides the USB device access via port 3240.
-
 ```
 # Install USBIP 
 sudo apt install hwdata linux-tools-generic
@@ -127,7 +127,6 @@ sudo usbip bind -b 1-3
 ```
 
 Install Coder package (and its command line tool) to communicate with the Coder server. The Coder command line tool then gets the config data from the server after login. This is helpful for the SSH names and credentials.
-
 ```
 # Local host coder **CLI install**
 curl -L https://coder.com/install.sh | sh
@@ -146,8 +145,42 @@ ssh -R 2001:localhost:3240 coder.EmbeddedCDE.main	# template: Devcontainers (Kub
 ```
 
 ## Windows
-TODO, see https://github.com/HansUweRempler/STM32
-Basically, use WSL and follow the [Linux](#linux) description.
+
+Install Windows USBIPD. Go to the latest release page for the usbipd-win project: https://github.com/dorssel/usbipd-win/releases. Select the .msi file, which will download the installer. Run the downloaded usbipd-win_x.msi installer file.
+
+Enable USB device sharing. Connect STM32 dev kit via USB, run a PowerShell with admin rights.
+```
+PS C:\WINDOWS\system32> usbipd.exe list
+Connected:
+BUSID  VID:PID    DEVICE                                                        STATE
+2-1    0483:374b  ST-Link Debug, USB Mass Storage Device, USB Serial Device...  Not shared
+[...]
+
+PS C:\WINDOWS\system32> usbipd.exe bind -b 2-1
+PS C:\WINDOWS\system32> usbipd.exe list
+Connected:
+BUSID  VID:PID    DEVICE                                                        STATE
+2-1    0483:374b  ST-Link Debug, USB Mass Storage Device, USB Serial Device...  Shared
+[...]
+```
+Install Coder package (and its command line tool) to communicate with the Coder server, see https://coder.com/docs/install.
+
+The Coder command line tool then gets the config data from the server after login. This is helpful for the SSH names and credentials.
+```
+# Local host coder **CLI install**
+PS C:\WINDOWS\system32> winget install Coder.Coder
+
+# Login to Coder server
+PS C:\Program Files\Coder\bin> .\coder.exe login http://192.168.178.186:32580
+
+# Config local SSH settings
+PS C:\Program Files\Coder\bin> .\coder.exe config-ssh
+```
+
+Finally, login and port-forward local USBIP server to the Coder workspace that shall access the USB device (via USPIP client).
+```
+PS C:\Program Files\Coder\bin> ssh -R 2001:localhost:3240 coder.emerald-grasshopper-50.main
+```
 
 ## Docker
 Optional section to test USBIP.
