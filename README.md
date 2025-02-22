@@ -140,15 +140,24 @@ coder config-ssh
 
 Finally, login and port-forward local USBIP server to the Coder workspace that shall access the USB device (via USPIP client):
 ```
-ssh -R 2001:localhost:3240 coder.androiddev.main	# template: Kubernetes (Deployment)
-ssh -R 2001:localhost:3240 coder.EmbeddedCDE.main	# template: Devcontainers (Kubernetes)
+ssh -R 2001:localhost:3240  coder.emerald-grasshopper-50.main
 ```
+
+# Attach the remote USB device
+```
+# Optional check if tunneled port-forwaring worked; requires `apt install netcat-openbsd`
+nc -z localhost 2001 || echo "no tunnel open"
+
+sudo usbip --tcp-port 2001 list -r localhost
+sudo usbip --tcp-port 2001 attach -r localhost -b 2-1
+lsusb
+sudo st-flash reset
+```
+
 
 ## Windows
 
-Install Windows USBIPD. Go to the latest release page for the usbipd-win project: https://github.com/dorssel/usbipd-win/releases. Select the .msi file, which will download the installer. Run the downloaded usbipd-win_x.msi installer file.
-
-Enable USB device sharing. Connect STM32 dev kit via USB, run a PowerShell with admin rights.
+Install Windows USBIPD. Go to the latest release page for the usbipd-win project: https://github.com/dorssel/usbipd-win/releases. Select the .msi file, which will download the installer. Run the downloaded usbipd-win_x.msi installer file. Enable USB device sharing. Connect STM32 dev kit via USB, run a PowerShell with admin rights.
 ```
 PS C:\WINDOWS\system32> usbipd.exe list
 Connected:
@@ -163,9 +172,8 @@ BUSID  VID:PID    DEVICE                                                        
 2-1    0483:374b  ST-Link Debug, USB Mass Storage Device, USB Serial Device...  Shared
 [...]
 ```
-Install Coder package (and its command line tool) to communicate with the Coder server, see https://coder.com/docs/install.
 
-The Coder command line tool then gets the config data from the server after login. This is helpful for the SSH names and credentials.
+Install Coder package (and its command line tool) to communicate with the Coder server, see https://coder.com/docs/install. The Coder command line tool then gets the config data from the server after login. This is helpful for the SSH names and credentials.
 ```
 # Local host coder **CLI install**
 PS C:\WINDOWS\system32> winget install Coder.Coder
@@ -180,6 +188,17 @@ PS C:\Program Files\Coder\bin> .\coder.exe config-ssh
 Finally, login and port-forward local USBIP server to the Coder workspace that shall access the USB device (via USPIP client).
 ```
 PS C:\Program Files\Coder\bin> ssh -R 2001:localhost:3240 coder.emerald-grasshopper-50.main
+```
+
+# Attach the remote USB device
+```
+# Optional check if tunneled port-forwaring worked; requires `apt install netcat-openbsd`
+nc -z localhost 2001 || echo "no tunnel open"
+
+sudo usbip --tcp-port 2001 list -r localhost
+sudo usbip --tcp-port 2001 attach -r localhost -b 2-1
+lsusb
+sudo st-flash reset
 ```
 
 ## Docker
