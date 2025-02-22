@@ -1,5 +1,6 @@
 # Use the base image from devcontainer.json
-FROM mcr.microsoft.com/devcontainers/base:jammy
+#FROM mcr.microsoft.com/devcontainers/base:jammy
+FROM codercom/ubuntu-dev:latest
 
 # Set the environment variable to non-interactive
 ENV DEBIAN_FRONTEND=noninteractive
