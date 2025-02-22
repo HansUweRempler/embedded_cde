@@ -3,7 +3,8 @@
 {
 	// Use image or use a Dockerfile. More info: https://containers.dev/guide/dockerfile
 	// "name": "MSdevconUbuntu",
-	"image": "mcr.microsoft.com/devcontainers/base:jammy"
+	// "image": "mcr.microsoft.com/devcontainers/base:jammy"
+	"image": "codercom/ubuntu-dev:latest"
 	// "dockerFile": "Dockerfile"
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
