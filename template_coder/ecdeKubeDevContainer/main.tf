@@ -359,6 +359,7 @@ resource "coder_agent" "main" {
   arch           = "amd64"
   startup_script = <<-EOT
     echo "hello world"
+    depmod && modprobe vhci_hcd
   EOT
 
   # These environment variables allow you to make Git commits right away after creating a
