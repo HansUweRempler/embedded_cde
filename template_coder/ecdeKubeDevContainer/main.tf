@@ -40,7 +40,7 @@ variable "use_kubeconfig" {
 
 variable "namespace" {
   type        = string
-  default     = "default"
+  default     = "coder"
   description = "The Kubernetes namespace to create workspaces in (must exist prior to creating workspaces). If the Coder host is itself running as a Pod on the same Kubernetes cluster as you are deploying workspaces to, set this to the same namespace."
 }
 
@@ -359,7 +359,6 @@ resource "coder_agent" "main" {
   arch           = "amd64"
   startup_script = <<-EOT
     echo "hello world"
-    depmod && modprobe vhci_hcd
   EOT
 
   # These environment variables allow you to make Git commits right away after creating a

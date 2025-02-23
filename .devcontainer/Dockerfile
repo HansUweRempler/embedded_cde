@@ -5,18 +5,25 @@ FROM ubuntu:latest
 # Set the environment variable to non-interactive
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install additional packages
+# Update the package list
 RUN apt-get update
-RUN apt-get -y install --no-install-recommends \
-        usbutils \
-        stlink-tools \
-        kmod
 
-# Install tools for the Linux kernel and kernel modules
+# Install additional packages
+# RUN apt-get -y install --no-install-recommends \
+#         usbutils \
+#         stlink-tools \
+#         kmod
+
+# # Install tools for the Linux kernel and kernel modules
+# RUN apt-get -y install \
+#         linux-tools-$(uname -r) \
+#         linux-modules-$(uname -r) \
+#         linux-modules-extra-$(uname -r)
+
+# Install coder agent requirements
 RUN apt-get -y install \
-        linux-tools-$(uname -r) \
-        linux-modules-$(uname -r) \
-        linux-modules-extra-$(uname -r)
+        curl \        
+        wget
 
 # Install embedded build toolchain
 # RUN apt-get -y install --no-install-recommends \
