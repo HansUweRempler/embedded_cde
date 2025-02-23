@@ -109,16 +109,8 @@ resource "coder_agent" "main" {
   arch           = "amd64"
   startup_script = <<-EOT
     set -e
-
-    # Install the latest code-server.
-    # Append "--version x.x.x" to install a specific version of code-server.
-    curl -fsSL https://code-server.dev/install.sh | sh -s -- --method=standalone --prefix=/tmp/code-server
-
-    # Start code-server in the background.
-    /tmp/code-server/bin/code-server --auth none --port 13337 >/tmp/code-server.log 2>&1 &
-
     sudo apt update
-    sudo apt -y install --no-install-recommends \
+    sudo apt -y install \
          usbutils \
          stlink-tools \
          kmod
@@ -127,7 +119,7 @@ resource "coder_agent" "main" {
          linux-modules-$(uname -r) \
          linux-modules-extra-$(uname -r)
     sudo depmod
-    sudo modprobe vhci_hcd
+    sudo modprobe vhci-hcd
   EOT
 
   # The following metadata blocks are optional. They are used to display
@@ -185,23 +177,6 @@ resource "coder_agent" "main" {
     EOT
     interval = 60
     timeout  = 1
-  }
-}
-
-# code-server
-resource "coder_app" "code-server" {
-  agent_id     = coder_agent.main.id
-  slug         = "code-server"
-  display_name = "code-server"
-  icon         = "/icon/code.svg"
-  url          = "http://localhost:13337?folder=/home/coder"
-  subdomain    = false
-  share        = "owner"
-
-  healthcheck {
-    url       = "http://localhost:13337/healthz"
-    interval  = 3
-    threshold = 10
   }
 }
 
