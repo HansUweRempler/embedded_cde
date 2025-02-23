@@ -355,14 +355,11 @@ resource "kubernetes_deployment" "main" {
 }
 
 resource "coder_agent" "main" {
-  arch           = data.coder_provisioner.me.arch
   os             = "linux"
+  arch           = "amd64"
   startup_script = <<-EOT
-    set -e
-
-    # Add any commands that should be executed at workspace startup (e.g install requirements, start a program, etc) here
+    echo "hello world"
   EOT
-  dir            = "/workspaces"
 
   # These environment variables allow you to make Git commits right away after creating a
   # workspace. Note that they take precedence over configuration defined in ~/.gitconfig!
