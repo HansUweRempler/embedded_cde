@@ -360,6 +360,7 @@ resource "coder_agent" "main" {
   startup_script = <<-EOT
     echo "hello world"
   EOT
+  dir            = "/workspaces"
 
   # These environment variables allow you to make Git commits right away after creating a
   # workspace. Note that they take precedence over configuration defined in ~/.gitconfig!

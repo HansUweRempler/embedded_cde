@@ -5,7 +5,7 @@
 	// "name": "MSdevconUbuntu",
 	// "image": "mcr.microsoft.com/devcontainers/base:jammy"
 	// "image": "codercom/ubuntu-dev:latest"
-	"dockerFile": "Dockerfile"
+	"dockerFile": "Dockerfile",
 
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
@@ -16,7 +16,7 @@
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "uname -a",
 	// Load kernel modules for USBIP
-	//"postCreateCommand" : "sudo depmod && sudo modprobe usbip_host && sudo modprobe vhci_hcd"
+	"postCreateCommand": "echo 'loading vhci-hcd' && depmod && modprobe vhci-hcd &&  echo 'done loading vhci-hcd'"
 	
 	// Configure tool-specific properties.
 	// "customizations": {},
