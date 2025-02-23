@@ -8,7 +8,12 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Update the package list
 RUN apt-get update
 
-# Install additional packages
+# Install coder agent requirements
+RUN apt-get -y install \
+        curl \        
+        wget
+
+        # Install additional packages
 # RUN apt-get -y install --no-install-recommends \
 #         usbutils \
 #         stlink-tools \
@@ -20,10 +25,6 @@ RUN apt-get update
 #         linux-modules-$(uname -r) \
 #         linux-modules-extra-$(uname -r)
 
-# Install coder agent requirements
-RUN apt-get -y install \
-        curl \        
-        wget
 
 # Install embedded build toolchain
 # RUN apt-get -y install --no-install-recommends \
