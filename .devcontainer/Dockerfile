@@ -6,18 +6,18 @@ FROM ubuntu:latest
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Update the package list
-RUN apt-get update
+RUN apt update
 
 # Install coder agent requirements
-RUN apt-get -y install \
+RUN apt -y install \
         curl \        
         wget
 
         # Install additional packages
-# RUN apt-get -y install --no-install-recommends \
-#         usbutils \
-#         stlink-tools \
-#         kmod
+RUN apt -y install \
+        usbutils \
+        stlink-tools \
+        kmod
 
 # # Install tools for the Linux kernel and kernel modules
 # RUN apt-get -y install \
