@@ -13,18 +13,17 @@ RUN apt -y install \
         curl \        
         wget
 
-        # Install additional packages
+# Install additional packages
 RUN apt -y install \
         usbutils \
         stlink-tools \
         kmod
 
-# # Install tools for the Linux kernel and kernel modules
-# RUN apt-get -y install \
-#         linux-tools-$(uname -r) \
-#         linux-modules-$(uname -r) \
-#         linux-modules-extra-$(uname -r)
-
+# Install tools for the Linux kernel and kernel modules
+RUN apt -y install \
+        linux-tools-$(uname -r) \
+        linux-modules-$(uname -r) \
+        linux-modules-extra-$(uname -r)
 
 # Install embedded build toolchain
 # RUN apt-get -y install --no-install-recommends \
