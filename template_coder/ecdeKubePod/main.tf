@@ -109,6 +109,7 @@ resource "coder_agent" "main" {
   arch           = "amd64"
   startup_script = <<-EOT
     set -e
+    echo 'Defaults env_keep += "http_proxy https_proxy no_proxy"' | sudo tee -a /etc/sudoers >/dev/null
     sudo apt update
     sudo apt -y install \
          usbutils \
