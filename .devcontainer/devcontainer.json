@@ -16,7 +16,7 @@
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "uname -a",
 	// Load kernel modules for USBIP
-	"postCreateCommand": "echo 'loading vhci-hcd' && depmod && modprobe vhci-hcd &&  echo 'done loading vhci-hcd'"
+	// "postCreateCommand": "echo 'loading vhci-hcd' && depmod && modprobe vhci-hcd &&  echo 'done loading vhci-hcd'"
 	
 	// Configure tool-specific properties.
 	// "customizations": {},
